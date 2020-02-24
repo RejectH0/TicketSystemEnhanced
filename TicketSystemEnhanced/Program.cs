@@ -139,18 +139,15 @@ namespace TicketSystemEnhanced
 
             return str;
         }
-
         public void Dispose()
         {
             Ticket.idDestroy = this.TicketNumber;
         }
-
         private void LogError(string eMessage, string location)
         {
             Console.WriteLine(eMessage, location);
         }
     }
-
     class Person : IDisposable
     {
         private static int idNext = 1;
@@ -323,11 +320,10 @@ namespace TicketSystemEnhanced
         {
             List<string> summarySelection = new List<string>()
             {
-                "Bug Ticket",
-                "Problem Ticket",
-                "Information Only Ticket",
-                "Move/Add/Change Ticket",
-                "Test Ticket"
+                "Bug/Defect",
+                "Enhancement",
+                "Task"
+                
             };
 
             List<string> prioritySelection = new List<string>()
