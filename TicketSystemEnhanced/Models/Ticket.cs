@@ -12,9 +12,7 @@ namespace TicketSystemEnhanced.Models
     {
         private static int idNext = 1;
         private static int idDestroy = -1;
-
-        public static List<Ticket> tickets = new List<Ticket>();
-
+        
         protected Ticket(string summary, string status, string priority, string submitter, string assigned,
             string watching)
         {

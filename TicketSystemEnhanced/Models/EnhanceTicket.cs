@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TicketSystemEnhanced.Models
 {
-    class EnhanceTicket : Ticket
+    public class EnhanceTicket : Ticket
     {
         public EnhanceTicket(string summary, string status, string priority, string submitter, string assigned, string watching, string software, string cost, string reason, string estimate) : base(summary, status, priority, submitter, assigned, watching)
         {

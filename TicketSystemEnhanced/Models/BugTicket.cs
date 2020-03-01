@@ -8,7 +8,7 @@ using NLog;
 
 namespace TicketSystemEnhanced.Models
 {
-    class BugTicket : Ticket
+    public class BugTicket : Ticket
     {
         public BugTicket(string summary, string status, string priority, string submitter, string assigned, string watching, string severity) : base(summary, status, priority, submitter, assigned, watching)
         {

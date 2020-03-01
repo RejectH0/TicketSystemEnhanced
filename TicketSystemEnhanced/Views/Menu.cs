@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TicketSystemEnhanced.Controllers;
 using TicketSystemEnhanced.Models;
 
 namespace TicketSystemEnhanced.Views
 {
     public class Menu
     {
-        private static int index;
+        private static int _index;
+        public ListController ListController { get; set; }
+
+        public Menu(ListController listController)
+        {
+            this.ListController = listController;
+        }
 
         public void RunMainMenu()
         {
@@ -42,7 +49,7 @@ namespace TicketSystemEnhanced.Views
                 switch (userChoice)
                 {
                     case 1:
-                        ReadFile();
+                        ReadAllTickets();
                         break;
                     case 2:
                         CreateTicket();
@@ -51,13 +58,13 @@ namespace TicketSystemEnhanced.Views
                         ListAllTickets();
                         break;
                     case 4:
-                        ListAllPeople();
+                        ListTicketsByType();
                         break;
                     case 5:
-                        ExitGracefully();
+                        ListAllPeople();
                         break;
                     case 6:
-                        InvalidMenuChoice();
+                        ExitGracefully();
                         break;
                     case 7:
                         InvalidMenuChoice();
@@ -77,14 +84,16 @@ namespace TicketSystemEnhanced.Views
                 }
             }
         }
+
         private int PrintMainMenu()
         {
             var menuName = "Main";
             string[] menuChoices =
             {
-                "Read Ticket File",
+                "Load all Ticket Files into memory: (BugTicket, EnhanceTicket, TaskTicket)",
                 "Create Ticket",
                 "List All Tickets",
+                "List Tickets of a specific Type",
                 "List All People",
                 "Exit Program"
             };
@@ -94,26 +103,9 @@ namespace TicketSystemEnhanced.Views
 
             return menuChoices.Count();
         }
-        private void DisplayHeader()
+        private void ReadAllTickets()
         {
-            Console.Clear();
-            Console.SetCursorPosition(0, 0);
-            for (var i = 0; i < Console.WindowWidth; i++) Console.Write("*");
-
-            var winWidth = Console.WindowWidth - 1;
-            Console.SetCursorPosition(winWidth, 1);
-            Console.Write("*");
-
-            Console.SetCursorPosition(0, 2);
-            for (var i = 0; i < Console.WindowWidth; i++) Console.Write("*");
-
-            var menuText = "Welcome to the Gregg Sperling Ticket System!";
-            Console.SetCursorPosition(0, 1);
-            // ReSharper disable once FormatStringProblem
-            Console.WriteLine("{0," + (Console.WindowWidth / 2 + menuText.Length / 2) + "}", menuText);
-            Console.SetCursorPosition(0, 1);
-            Console.Write("*");
-            Console.SetCursorPosition(0, 5);
+            throw new NotImplementedException();
         }
         private void CreateTicket()
         {
@@ -197,119 +189,6 @@ namespace TicketSystemEnhanced.Views
             Console.SetCursorPosition(10, 5);
             PressEnterToContinue();
         }
-
-        private void ConsoleSpaces(int spaces, int lines)
-        {
-            var cursorLeft = Console.CursorLeft;
-            var cursorTop = Console.CursorTop;
-
-
-            for (var i = 0; i < lines; i++)
-            {
-                Console.SetCursorPosition(cursorLeft, cursorTop + i);
-                for (var g = 0; g < spaces; g++) Console.Write(" ");
-            }
-        }
-
-        private Person MenuItemPersonSelection()
-        {
-            index = 0;
-            var str = "";
-            Console.CursorVisible = false;
-            var people = new List<string>();
-            people.Add("[New]");
-
-            foreach (var item in Person.AllPeople) people.Add(item.FullName);
-
-            while (str.Length == 0) str = drawMenu(people, Console.CursorLeft, Console.CursorTop);
-
-            Console.CursorVisible = true;
-
-            if (str.Equals("[New]"))
-            {
-                Console.SetCursorPosition(10, 5);
-                var newName = getStringValue("Please enter the person's Full Name");
-                Console.SetCursorPosition(10, 5);
-                ConsoleSpaces(70, 2);
-                new Person(newName);
-                return Person.AllPeople.Find(item => item.FullName.Equals(newName));
-            }
-
-            return Person.AllPeople.Find(item => item.FullName.Equals(str));
-        }
-
-        private string MenuItemSelection(List<string> menuItems)
-        {
-            index = 0;
-            var str = "";
-
-            Console.CursorVisible = false;
-            while (str.Length == 0) str = drawMenu(menuItems, Console.CursorLeft, Console.CursorTop);
-
-            Console.CursorVisible = true;
-            return str;
-        }
-
-        private string drawMenu(List<string> items, int cursorLeft, int cursorTop)
-        {
-            Console.SetCursorPosition(cursorLeft, cursorTop);
-            for (var g = 0; g < items.Count; g++)
-            {
-                if (g == index)
-                {
-                    Console.BackgroundColor = ConsoleColor.Gray;
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine(items[g]);
-                }
-                else
-                {
-                    Console.WriteLine(items[g]);
-                }
-
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-
-            var ckey = Console.ReadKey();
-
-            if (ckey.Key == ConsoleKey.DownArrow)
-            {
-                if (index == items.Count - 1)
-                {
-                    Console.SetCursorPosition(cursorLeft, cursorTop);
-                    index = 0;
-                }
-                else
-                {
-                    Console.SetCursorPosition(cursorLeft, cursorTop);
-                    index++;
-                }
-            }
-            else if (ckey.Key == ConsoleKey.UpArrow)
-            {
-                if (index <= 0)
-                {
-                    Console.SetCursorPosition(cursorLeft, cursorTop);
-                    index = items.Count - 1;
-                }
-                else
-                {
-                    Console.SetCursorPosition(cursorLeft, cursorTop);
-                    index--;
-                }
-            }
-            else if (ckey.Key == ConsoleKey.Enter)
-            {
-                return items[index];
-            }
-            else
-            {
-                return "";
-            }
-
-            return "";
-        }
-
         private void ListAllTickets()
         {
             DisplayHeader();
@@ -333,7 +212,10 @@ namespace TicketSystemEnhanced.Views
 
             PressEnterToContinue();
         }
-
+        private void ListTicketsByType()
+        {
+            throw new NotImplementedException();
+        }
         private void ListAllPeople()
         {
             DisplayHeader();
@@ -343,7 +225,114 @@ namespace TicketSystemEnhanced.Views
 
             PressEnterToContinue();
         }
+        private void ConsoleSpaces(int spaces, int lines)
+        {
+            var cursorLeft = Console.CursorLeft;
+            var cursorTop = Console.CursorTop;
 
+
+            for (var i = 0; i < lines; i++)
+            {
+                Console.SetCursorPosition(cursorLeft, cursorTop + i);
+                for (var g = 0; g < spaces; g++) Console.Write(" ");
+            }
+        }
+        private Person MenuItemPersonSelection()
+        {
+            _index = 0;
+            var str = "";
+            Console.CursorVisible = false;
+            var people = new List<string>();
+            people.Add("[New]");
+
+            foreach (var item in Person.AllPeople) people.Add(item.FullName);
+
+            while (str.Length == 0) str = DrawMenu(people, Console.CursorLeft, Console.CursorTop);
+
+            Console.CursorVisible = true;
+
+            if (str.Equals("[New]"))
+            {
+                Console.SetCursorPosition(10, 5);
+                var newName = GetStringValue("Please enter the person's Full Name");
+                Console.SetCursorPosition(10, 5);
+                ConsoleSpaces(70, 2);
+                new Person(newName);
+                return Person.AllPeople.Find(item => item.FullName.Equals(newName));
+            }
+
+            return Person.AllPeople.Find(item => item.FullName.Equals(str));
+        }
+        private string MenuItemSelection(List<string> menuItems)
+        {
+            _index = 0;
+            var str = "";
+
+            Console.CursorVisible = false;
+            while (str.Length == 0) str = DrawMenu(menuItems, Console.CursorLeft, Console.CursorTop);
+
+            Console.CursorVisible = true;
+            return str;
+        }
+        private string DrawMenu(List<string> items, int cursorLeft, int cursorTop)
+        {
+            Console.SetCursorPosition(cursorLeft, cursorTop);
+            for (var g = 0; g < items.Count; g++)
+            {
+                if (g == _index)
+                {
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.WriteLine(items[g]);
+                }
+                else
+                {
+                    Console.WriteLine(items[g]);
+                }
+
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+            var ckey = Console.ReadKey();
+
+            if (ckey.Key == ConsoleKey.DownArrow)
+            {
+                if (_index == items.Count - 1)
+                {
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    _index = 0;
+                }
+                else
+                {
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    _index++;
+                }
+            }
+            else if (ckey.Key == ConsoleKey.UpArrow)
+            {
+                if (_index <= 0)
+                {
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    _index = items.Count - 1;
+                }
+                else
+                {
+                    Console.SetCursorPosition(cursorLeft, cursorTop);
+                    _index--;
+                }
+            }
+            else if (ckey.Key == ConsoleKey.Enter)
+            {
+                return items[_index];
+            }
+            else
+            {
+                return "";
+            }
+
+            return "";
+        }
         private void ExitGracefully()
         {
             Console.Clear();
@@ -353,7 +342,6 @@ namespace TicketSystemEnhanced.Views
             PressEnterToContinue();
             Environment.Exit(0);
         }
-
         private void InvalidMenuChoice()
         {
             Console.Clear();
@@ -362,15 +350,34 @@ namespace TicketSystemEnhanced.Views
             Console.WriteLine("{0,15}", invalidChoice);
             PressEnterToContinue();
         }
-
         private void PressEnterToContinue()
         {
             Console.Write("Press Enter To Continue: ");
             Console.ReadKey(false);
             Console.WriteLine();
         }
+        private void DisplayHeader()
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            for (var i = 0; i < Console.WindowWidth; i++) Console.Write("*");
 
-        private string getStringValue(string prompt)
+            var winWidth = Console.WindowWidth - 1;
+            Console.SetCursorPosition(winWidth, 1);
+            Console.Write("*");
+
+            Console.SetCursorPosition(0, 2);
+            for (var i = 0; i < Console.WindowWidth; i++) Console.Write("*");
+
+            var menuText = "Welcome to the Gregg Sperling Ticket System!";
+            Console.SetCursorPosition(0, 1);
+            // ReSharper disable once FormatStringProblem
+            Console.WriteLine("{0," + (Console.WindowWidth / 2 + menuText.Length / 2) + "}", menuText);
+            Console.SetCursorPosition(0, 1);
+            Console.Write("*");
+            Console.SetCursorPosition(0, 5);
+        }
+        private string GetStringValue(string prompt)
         {
             var str = "";
             while (true)
