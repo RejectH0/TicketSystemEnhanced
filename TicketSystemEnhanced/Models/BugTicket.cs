@@ -11,7 +11,11 @@ namespace TicketSystemEnhanced.Models
     public class BugTicket : Ticket
     {
         public string Severity { get; set; }
-        
+
+        public BugTicket()
+        {
+
+        }
         public BugTicket(string summary, string status, string priority, string submitter, string assigned, string watching) : base(summary, status, priority, submitter, assigned, watching)
         {
         }

@@ -21,11 +21,22 @@ namespace TicketSystemEnhanced.Controllers
             this.TaskTickets = taskTickets;
         }
 
-        public int NewBugTicket(string ticketSummary, string ticketStatus, string ticketPriority, Person ticketSubmitter, Person ticketAssigned, List<Person> watchers)
+        public int ReturnTicketNumber()
         {
-            BugTicket bugTicket = new BugTicket(ticketSummary, ticketStatus, ticketPriority, ticketSubmitter, ticketAssigned, watchers);
+
+            return this.ReturnTicketNumber();
+        }
+
+        public int NewBugTicket()
+        {
+            BugTicket bugTicket = new BugTicket();
             BugTickets.Add(bugTicket);
             return bugTicket.ReturnTicketNumber();
+        }
+
+        public void EditBugTicketStandard(int bugTicketID, string ticketSummary, string ticketStatus, string ticketPriority, Person ticketSubmitter, Person ticketAssigned, List<Person> watchers)
+        {
+            BugTicket bugTicket = BugTickets.FindIndex(bugTicketID);
         }
         public int NewEnhanceTicket(string ticketSummary, string ticketStatus, string ticketPriority, Person ticketSubmitter, Person ticketAssigned, List<Person> watchers)
         {

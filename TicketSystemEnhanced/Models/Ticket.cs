@@ -10,20 +10,20 @@ namespace TicketSystemEnhanced.Models
 {
     public abstract class Ticket
     {
-        private static int idNext = 1;
-        private static int idDestroy = -1;
+        private static int _idNext = 1;
+        private static int _idDestroy = -1;
         
         protected Ticket(string summary, string status, string priority, string submitter, string assigned,
             string watching)
         {
-            if (idDestroy == -1)
+            if (_idDestroy == -1)
             {
-                TicketNumber = idNext;
-                idNext++;
+                TicketNumber = _idNext;
+                _idNext++;
             }
             else
             {
-                TicketNumber = idDestroy;
+                TicketNumber = _idDestroy;
             }
 
             Summary = summary;
@@ -49,14 +49,14 @@ namespace TicketSystemEnhanced.Models
         protected Ticket(string summary, string status, string priority, Person submitter, Person assigned,
             List<Person> watching)
         {
-            if (idDestroy == -1)
+            if (_idDestroy == -1)
             {
-                TicketNumber = idNext;
-                idNext++;
+                TicketNumber = _idNext;
+                _idNext++;
             }
             else
             {
-                TicketNumber = idDestroy;
+                TicketNumber = _idDestroy;
             }
 
             this.Summary = summary;
@@ -69,6 +69,19 @@ namespace TicketSystemEnhanced.Models
             foreach (var item in watching) this.Watching.Add(item);
         }
 
+        protected Ticket()
+        {
+            if (_idDestroy == -1)
+            {
+                TicketNumber = _idNext;
+                _idNext++;
+            }
+            else
+            {
+                TicketNumber = _idDestroy;
+            }
+        }
+
         public int TicketNumber { get; }
         public string Summary { get; set; }
         public string Status { get; set; }
@@ -79,7 +92,7 @@ namespace TicketSystemEnhanced.Models
 
         public void Dispose()
         {
-            idDestroy = TicketNumber;
+            _idDestroy = TicketNumber;
         }
 
         private static void Dump(object o)

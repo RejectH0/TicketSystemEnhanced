@@ -129,15 +129,16 @@ namespace TicketSystemEnhanced.Views
             switch (primaryTicketType)
             {
                 case "Bug/Defect Ticket":
-                    int bugTicketNumber = GetMainTicketDetails(primaryTicketType);
-                    GetBugTicketDetails(bugTicketNumber);
+                    int bugTicketNumber = this.ListController.NewBugTicket();
+                    int bugTicketNumberProgress = GetMainTicketDetails(primaryTicketType, bugTicketNumber);
+                    GetBugTicketDetails(bugTicketNumberProgress);
                     break;
                 case "Enhancement Ticket":
-                    GetMainTicketDetails(primaryTicketType);
+                    GetMainTicketDetails(primaryTicketType, TODO);
                     getEnhanceTicketDetails();
                     break;
                 case "Task Ticket":
-                    GetMainTicketDetails(primaryTicketType);
+                    GetMainTicketDetails(primaryTicketType, TODO);
                     getTaskTicketDetails();
                     break;
                 default:
@@ -162,7 +163,7 @@ namespace TicketSystemEnhanced.Views
             Console.WriteLine("Please choose Ticket Severity:");
             var ticketSeverity = MenuItemSelection(severitySelection);
         }
-        private int GetMainTicketDetails(string ticketType)
+        private int GetMainTicketDetails(string ticketType, int typeTicketNumber)
         {
             // Ticket: Status
             Console.SetCursorPosition(75, 7);
@@ -238,8 +239,8 @@ namespace TicketSystemEnhanced.Views
             switch (ticketType)
             {
                 case "Bug/Defect Ticket":
-                    ListController.NewBugTicket(ticketSummary,ticketStatus,ticketPriority,ticketSubmitter,ticketAssigned,watchers);
-                    return bugTicket.ReturnTicketNumber();
+                    var bugTicket = ListController.BugTickets;
+                    return bugTicket;
                 case "Enhancement Ticket":
                     EnhanceTicket enhanceTicket = new EnhanceTicket(ticketSummary, ticketStatus, ticketPriority, ticketSubmitter, ticketAssigned, watchers);
                     return enhanceTicket.ReturnTicketNumber();
