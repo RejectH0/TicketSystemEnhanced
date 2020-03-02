@@ -10,14 +10,20 @@ namespace TicketSystemEnhanced.Models
 {
     public class BugTicket : Ticket
     {
-        public BugTicket(string summary, string status, string priority, string submitter, string assigned, string watching, string severity) : base(summary, status, priority, submitter, assigned, watching)
+        public string Severity { get; set; }
+        
+        public BugTicket(string summary, string status, string priority, string submitter, string assigned, string watching) : base(summary, status, priority, submitter, assigned, watching)
         {
         }
 
-        public BugTicket(string summary, string status, string priority, Person submitter, Person assigned, List<Person> watching, string severity) : base(summary, status, priority, submitter, assigned, watching)
+        public BugTicket(string summary, string status, string priority, Person submitter, Person assigned, List<Person> watching) : base(summary, status, priority, submitter, assigned, watching)
         {
         }
 
+        public int ReturnTicketNumber()
+        {
+            return this.TicketNumber;
+        }
         public void ReadFile()
         {
             const string pathWithEnv = @"%USERPROFILE%\Documents\GS Ticket System-Bug Tickets.csv";

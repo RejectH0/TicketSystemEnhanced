@@ -52,7 +52,7 @@ namespace TicketSystemEnhanced.Views
                         ReadAllTickets();
                         break;
                     case 2:
-                        CreateTicket();
+                        CreateTicketRouter();
                         break;
                     case 3:
                         ListAllTickets();
@@ -107,15 +107,69 @@ namespace TicketSystemEnhanced.Views
         {
             throw new NotImplementedException();
         }
-        private void CreateTicket()
+
+        private void CreateTicketRouter()
         {
-            var summarySelection = new List<string>
+            var ticketType = new List<string>
             {
-                "Bug/Defect",
-                "Enhancement",
-                "Task"
+                "Bug/Defect Ticket",
+                "Enhancement Ticket",
+                "Task Ticket"
             };
 
+            DisplayHeader();
+            Console.SetCursorPosition(0, 6);
+            var menuText = "-=+> Create Ticket <+=-";
+            Console.SetCursorPosition(0, 6);
+            // ReSharper disable FormatStringProblem
+            Console.WriteLine("{0," + (Console.WindowWidth / 2 + menuText.Length / 2) + "}", menuText);
+            Console.SetCursorPosition(0, 7);
+            Console.WriteLine("Please choose Ticket Type:");
+            var primaryTicketType = MenuItemSelection(ticketType);
+            switch (primaryTicketType)
+            {
+                case "Bug/Defect Ticket":
+                    int bugTicketNumber = GetMainTicketDetails(primaryTicketType);
+                    GetBugTicketDetails(bugTicketNumber);
+                    break;
+                case "Enhancement Ticket":
+                    GetMainTicketDetails(primaryTicketType);
+                    getEnhanceTicketDetails();
+                    break;
+                case "Task Ticket":
+                    GetMainTicketDetails(primaryTicketType);
+                    getTaskTicketDetails();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void GetBugTicketDetails(int bugTicketNumber)
+        {
+            // Clear Previous window
+            Console.SetCursorPosition(0, 7);
+            ConsoleSpaces(50, 10);
+
+            // Ticket: Severity
+            var severitySelection = new List<string>
+            {
+                "Impact Low",
+                "Impact Medium",
+                "Impact High"
+            };
+            Console.SetCursorPosition(0, 7);
+            Console.WriteLine("Please choose Ticket Severity:");
+            var ticketSeverity = MenuItemSelection(severitySelection);
+        }
+        private int GetMainTicketDetails(string ticketType)
+        {
+            // Ticket: Status
+            Console.SetCursorPosition(75, 7);
+            var ticketStatus = "New";
+            Console.WriteLine("Ticket Status   : {0}", ticketStatus);
+
+            // Ticket: Priority
             var prioritySelection = new List<string>
             {
                 "Low",
@@ -123,31 +177,23 @@ namespace TicketSystemEnhanced.Views
                 "Priority",
                 "Emergency"
             };
-
-            DisplayHeader();
-            Console.SetCursorPosition(0, 6);
-            var menuText = "-=+> Create Ticket <+=-";
-            Console.SetCursorPosition(0, 6);
-            // ReSharper disable once FormatStringProblem
-            Console.WriteLine("{0," + (Console.WindowWidth / 2 + menuText.Length / 2) + "}", menuText);
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Please choose Ticket Priority:");
-
             var ticketPriority = MenuItemSelection(prioritySelection);
-            Console.SetCursorPosition(75, 7);
-            var ticketStatus = "New";
-            Console.WriteLine("Ticket Status   : {0}", ticketStatus);
             Console.SetCursorPosition(75, 8);
             Console.WriteLine("Ticket Priority : {0}", ticketPriority);
             Console.SetCursorPosition(0, 7);
             ConsoleSpaces(50, 10);
+
+            // Ticket: Summary
             Console.SetCursorPosition(0, 7);
-            Console.WriteLine("Please choose Summary Selection:");
-            var ticketSummary = MenuItemSelection(summarySelection);
+            var ticketSummary = GetStringValue("Please enter the Ticket Summary");
             Console.SetCursorPosition(75, 9);
             Console.WriteLine("Ticket Summary  : {0}", ticketSummary);
             Console.SetCursorPosition(0, 7);
             ConsoleSpaces(50, 10);
+
+            // Ticket: Submitter
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Who is submitting this ticket?");
             var ticketSubmitter = MenuItemPersonSelection();
@@ -155,12 +201,15 @@ namespace TicketSystemEnhanced.Views
             Console.WriteLine("Ticket Submitter: {0}", ticketSubmitter);
             Console.SetCursorPosition(0, 7);
             ConsoleSpaces(50, 10);
+
+            // Ticket: Assigned
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Please assign this ticket: ");
             var ticketAssigned = MenuItemPersonSelection();
             Console.SetCursorPosition(75, 11);
             Console.WriteLine("Ticket Assigned : {0}", ticketAssigned);
 
+            // Ticket: Watchers
             ConsoleKey userResponse;
             //string Key;
             var watchers = new List<Person>();
@@ -184,10 +233,22 @@ namespace TicketSystemEnhanced.Views
                 ConsoleSpaces(60, 20);
             } while (userResponse == ConsoleKey.Y);
 
-            tickets.Add(new Ticket(ticketSummary, ticketStatus, ticketPriority, ticketSubmitter, ticketAssigned,
-                watchers));
             Console.SetCursorPosition(10, 5);
-            PressEnterToContinue();
+
+            switch (ticketType)
+            {
+                case "Bug/Defect Ticket":
+                    ListController.NewBugTicket(ticketSummary,ticketStatus,ticketPriority,ticketSubmitter,ticketAssigned,watchers);
+                    return bugTicket.ReturnTicketNumber();
+                case "Enhancement Ticket":
+                    EnhanceTicket enhanceTicket = new EnhanceTicket(ticketSummary, ticketStatus, ticketPriority, ticketSubmitter, ticketAssigned, watchers);
+                    return enhanceTicket.ReturnTicketNumber();
+                case "Task Ticket":
+                    TaskTicket taskTicket = new TaskTicket(ticketSummary, ticketStatus, ticketPriority, ticketSubmitter, ticketAssigned, watchers);
+                    return taskTicket.ReturnTicketNumber();
+                default:
+                    return 0;
+            }
         }
         private void ListAllTickets()
         {
