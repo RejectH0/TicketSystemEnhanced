@@ -45,7 +45,6 @@ namespace TicketSystemEnhanced.Models
                         : new Person(t));
             }
         }
-
         protected Ticket(string summary, string status, string priority, Person submitter, Person assigned,
             List<Person> watching)
         {

@@ -27,11 +27,11 @@ namespace TicketSystemEnhanced.Controllers
             return this.ReturnTicketNumber();
         }
 
-        public int NewBugTicket()
+        public BugTicket NewBugTicket()
         {
             BugTicket bugTicket = new BugTicket();
             BugTickets.Add(bugTicket);
-            return bugTicket.ReturnTicketNumber();
+            return bugTicket;
         }
 
         public void EditBugTicketStandard(int bugTicketID, string ticketSummary, string ticketStatus, string ticketPriority, Person ticketSubmitter, Person ticketAssigned, List<Person> watchers)

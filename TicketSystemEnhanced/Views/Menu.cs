@@ -129,9 +129,9 @@ namespace TicketSystemEnhanced.Views
             switch (primaryTicketType)
             {
                 case "Bug/Defect Ticket":
-                    int bugTicketNumber = this.ListController.NewBugTicket();
-                    int bugTicketNumberProgress = GetMainTicketDetails(primaryTicketType, bugTicketNumber);
-                    GetBugTicketDetails(bugTicketNumberProgress);
+                    BugTicket bugTicket = this.ListController.NewBugTicket();
+                    GetMainTicketDetails(primaryTicketType, bugTicket);
+                    GetBugTicketDetails(bugTicket);
                     break;
                 case "Enhancement Ticket":
                     GetMainTicketDetails(primaryTicketType, TODO);
@@ -146,7 +146,7 @@ namespace TicketSystemEnhanced.Views
             }
         }
 
-        private void GetBugTicketDetails(int bugTicketNumber)
+        private void GetBugTicketDetails(BugTicket bugTicket)
         {
             // Clear Previous window
             Console.SetCursorPosition(0, 7);
@@ -163,7 +163,7 @@ namespace TicketSystemEnhanced.Views
             Console.WriteLine("Please choose Ticket Severity:");
             var ticketSeverity = MenuItemSelection(severitySelection);
         }
-        private int GetMainTicketDetails(string ticketType, int typeTicketNumber)
+        private int GetMainTicketDetails(string ticketType, BugTicket bugTicket)
         {
             // Ticket: Status
             Console.SetCursorPosition(75, 7);

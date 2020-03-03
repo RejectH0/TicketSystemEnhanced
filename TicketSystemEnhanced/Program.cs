@@ -8,7 +8,7 @@ using TicketSystemEnhanced.Views;
 
 namespace TicketSystemEnhanced
 {
-    // Version 2.04 // 01MAR2020 1950 // STUCK: ListController, Line 39: How to find instance of BugTicket?
+    // Version 2.05 // 02MAR2020 2050 // Still doesn't compile, still working through refactoring
 
     internal class Program
     {
